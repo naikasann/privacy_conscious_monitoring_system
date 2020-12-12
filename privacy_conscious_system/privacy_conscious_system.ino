@@ -3,7 +3,7 @@
 
 const char* uuid = "4fafc201-1fb5-459e-8fcc-c5c9c331914b"; // Tomoru Service UUID
 // Tomoru device address.(Multiple pieces in a row. Where to register.)
-const char* device_address[] = {"a4:cf:12:6d:b3:72", 
+const char* device_address[] = {"a4:cf:12:6d:b3:72",
                                 "aa",
                                 "a4:cf:12:6d:b3:72",
                                 "aa"};
@@ -17,6 +17,11 @@ int rssi_list[DEVICE_COUNT] = {0};
 int location;  // A place to register your location.
 // Array of locations to register (for debugging purposes, not actually needed)
 const char* Registration_location[] = {"A room", "B room", "C room", "D room", "OUTSIDE"};
+
+// 6-axis inertial sensor information.
+bool IMU6886Flag = false;
+float accX = 0, accY = 0, accZ = 0;
+float gyroX = 0, gyroY = 0, gyroZ = 0;
 
 // It looks up the highest value from the RSSI list and returns its index.
 int Take_maxrssi_idx(){
@@ -70,6 +75,8 @@ class MyAdvertisedDeviceCallbacks: public BLEAdvertisedDeviceCallbacks {
                     if(location != Take_maxrssi_idx){
                         Serial.println("We've detected that you're in a different location than last time!");
                         Serial.println("We'll send that information to you via Sigfox.")
+                        Serial.println("before location : " + Registration_location[location])
+                        Serial.println("after  location : " + Registration_location[Take_maxrssi_idx])
                         // Since you are in a different location,
                         // use Sigfox to send the code corresponding to that location.
                         // TODO : ↑ Feature Implementation.
@@ -100,12 +107,25 @@ void Task1(void *pvParameters){
 void setup() {
     M5.begin(true, false, true);    // // for Atom matrix and BLE device.
 
+    // for IMU6886 setup
+    if (M5.IMU.Init() != 0)
+        IMU6886Flag = false;
+    else
+        IMU6886Flag = true;
+
     // Configure the other core to look for BLEBeacon.
     xTaskCreatePinnedToCore(Task1,"Task1", 4096, NULL, 3, NULL, 1);
 }
 
 void loop(){
-    Serial.println("aaa");
+    if (IMU6886Flag == true){
+        M5.IMU.getGyroData(&gyroX, &gyroY, &gyroZ);
+        M5.IMU.getAccelData(&accX, &accY, &accZ);
+
+        SerialBT.printf("%.2f,%.2f,%.2f", gyroX, gyroY, gyroZ);
+        SerialBT.printf(",%.2f,%.2f,%.2f\r\n", accX * 1000, accY * 1000, accZ * 1000);
+    }
+
+
     M5.update();
-    delay(5000);
 }
