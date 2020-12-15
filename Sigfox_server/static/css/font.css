@@ -1,0 +1,27 @@
+:root{
+    font-family: 'Kosugi Maru', sans-serif;
+}
+
+/* Parent element specification of the font size */
+body {
+    font-size: 16px;
+}
+
+/* Specifying the Heading Element (body child elements)*/
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Kosugi Maru', sans-serif;
+}
+
+/* Specify the page title (body child elements) */
+.pagetitle{
+    font-family: "Nico Moji";
+    font-size: 130%;
+    letter-spacing: 0.1em;
+}
+
+.footer_content_title{
+    font-family: "Nico Moji";
+    font-size: 110%;
+    letter-spacing: 0.1em;
+    opacity: 1;
+}
