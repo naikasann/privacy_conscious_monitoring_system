@@ -1,0 +1,20 @@
+{%- extends "layout.html" %}
+{%- block content %}
+</br>
+<div class = "container">
+  <h1>卒業論文用デモ</h1>
+  <p>
+    <a class="btn btn-primary btn-block" href="/check" role="button">最新の状態を送信する</a>
+  </p>
+  <table class="table table-striped">
+    <tr><th>TIME</th><th>状態</th><th>(緯度, 経度)</th><th>半径誤差(m)</th><th></th></tr>
+  {% for list_list in datalist %}
+    <tr><td>
+    {% for list in list_list%}
+        {{list}}</td><td>
+    {% endfor %}
+    </td></tr>
+  {% endfor %}
+  </table>
+</div>
+{%- endblock %}
