@@ -21,7 +21,7 @@ userdatas = "userdata.csv"
 
 def send_line_notify(notification_message):
     # Status of the line app to be notified
-    line_notify_token = 'dGeM6thZCz1B5a6DKTA9jh77nY5grwPTgylQ5ZPERwf'
+    line_notify_token = 'TOKENNNNN'
     line_notify_api = 'https://notify-api.line.me/api/notify'
     headers = {'Authorization': f'Bearer {line_notify_token}'}
     data = {'message': f'message: {notification_message}'}
