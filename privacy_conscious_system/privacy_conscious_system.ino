@@ -12,10 +12,6 @@ const char* device_address[] = {"df:aa:a1:81:6b:6f",
 #define RSSI_DEFAULT_VALUE -200
 // A list to register rssi values when looking for Beacon.(Interrupt at a certain time)
 int rssi_list[DEVICE_COUNT];
-// initialization rssi list.
-for (int i = 0; i < DEVICE_COUNT; i++){
-    rssi_list[i] = RSSI_DEFAULT_VALUE;
-}
 
 #define SCANTIME 1  // Sets the scan time for the BLE (Sec).
 // Since scantime is also included in the delay, the program should be written with that in mind! Delay 0 is fine, though :)
@@ -106,6 +102,10 @@ class MyAdvertisedDeviceCallbacks: public BLEAdvertisedDeviceCallbacks {
                                 device_address[i], 17) == 0){
                         // In the case of a registered device ID, assign the RSSI value.
                         rssi = advertisedDevice.getRSSI();
+                        if(rssi > 40){
+                            Serial.println("None!");
+                            rssi_list[i] = RSSI_DEFAULT_VALUE;
+                        }
                         Serial.println(rssi);
                         rssi_list[i] = rssi;
                     }else{
@@ -157,6 +157,11 @@ void Task1(void *pvParameters){
 
 void setup() {
     M5.begin(true, false, true);    // // for Atom matrix and BLE device.
+
+    // initialization rssi list.
+    for (int i = 0; i < DEVICE_COUNT; i++){
+        rssi_list[i] = RSSI_DEFAULT_VALUE;
+    }
 
     // set the data rate for the Hardwareserial port
     // sigfox board setup. 32 => tx, 26 => rx

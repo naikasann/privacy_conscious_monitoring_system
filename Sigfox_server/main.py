@@ -35,10 +35,6 @@ def get_pw(username):
     return None
 
 @app.route("/")
-def go_home():
-    redirect("/home")
-
-@app.route("/home")
 @auth.login_required
 def inside():
     # take all data.
